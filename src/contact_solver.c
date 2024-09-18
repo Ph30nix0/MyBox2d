@@ -20,12 +20,12 @@ void b2PrepareOverflowContacts( b2StepContext* context )
 	b2ConstraintGraph* graph = context->graph;
 	b2GraphColor* color = graph->colors + b2_overflowIndex;
 	b2ContactConstraint* constraints = color->overflowConstraints;
-	int contactCount = color->contacts.count;
-	b2ContactSim* contacts = color->contacts.data;
+	int contactCount = color->contactSims.count;
+	b2ContactSim* contacts = color->contactSims.data;
 	b2BodyState* awakeStates = context->states;
 
 #if B2_VALIDATE
-	b2Body* bodies = world->bodyArray;
+	b2Body* bodies = world->bodyArrayNew.data;
 #endif
 
 	// Stiffer for static contacts to avoid bodies getting pushed through the ground
@@ -147,9 +147,9 @@ void b2WarmStartOverflowContacts( b2StepContext* context )
 	b2ConstraintGraph* graph = context->graph;
 	b2GraphColor* color = graph->colors + b2_overflowIndex;
 	b2ContactConstraint* constraints = color->overflowConstraints;
-	int contactCount = color->contacts.count;
+	int contactCount = color->contactSims.count;
 	b2SolverSet* awakeSet = context->world->solverSetArray + b2_awakeSet;
-	b2BodyState* states = awakeSet->states.data;
+	b2BodyState* states = awakeSet->statesNew.data;
 
 	// This is a dummy state to represent a static body because static bodies don't have a solver body.
 	b2BodyState dummyState = b2_identityBodyState;
@@ -210,9 +210,9 @@ void b2SolveOverflowContacts( b2StepContext* context, bool useBias )
 	b2ConstraintGraph* graph = context->graph;
 	b2GraphColor* color = graph->colors + b2_overflowIndex;
 	b2ContactConstraint* constraints = color->overflowConstraints;
-	int contactCount = color->contacts.count;
+	int contactCount = color->contactSims.count;
 	b2SolverSet* awakeSet = context->world->solverSetArray + b2_awakeSet;
-	b2BodyState* states = awakeSet->states.data;
+	b2BodyState* states = awakeSet->statesNew.data;
 
 	float inv_h = context->inv_h;
 	const float pushout = context->world->contactPushoutVelocity;
@@ -344,9 +344,9 @@ void b2ApplyOverflowRestitution( b2StepContext* context )
 	b2ConstraintGraph* graph = context->graph;
 	b2GraphColor* color = graph->colors + b2_overflowIndex;
 	b2ContactConstraint* constraints = color->overflowConstraints;
-	int contactCount = color->contacts.count;
+	int contactCount = color->contactSims.count;
 	b2SolverSet* awakeSet = context->world->solverSetArray + b2_awakeSet;
-	b2BodyState* states = awakeSet->states.data;
+	b2BodyState* states = awakeSet->statesNew.data;
 
 	float threshold = context->world->restitutionThreshold;
 
@@ -439,8 +439,8 @@ void b2StoreOverflowImpulses( b2StepContext* context )
 	b2ConstraintGraph* graph = context->graph;
 	b2GraphColor* color = graph->colors + b2_overflowIndex;
 	b2ContactConstraint* constraints = color->overflowConstraints;
-	b2ContactSim* contacts = color->contacts.data;
-	int contactCount = color->contacts.count;
+	b2ContactSim* contacts = color->contactSims.data;
+	int contactCount = color->contactSims.count;
 
 	// float hitEventThreshold = context->world->hitEventThreshold;
 
@@ -1291,7 +1291,7 @@ void b2PrepareContactsTask( int startIndex, int endIndex, b2StepContext* context
 	b2ContactConstraintSIMD* constraints = context->simdContactConstraints;
 	b2BodyState* awakeStates = context->states;
 #if B2_VALIDATE
-	b2Body* bodies = world->bodyArray;
+	b2Body* bodies = world->bodyArrayNew.data;
 #endif
 
 	// Stiffer for static contacts to avoid bodies getting pushed through the ground

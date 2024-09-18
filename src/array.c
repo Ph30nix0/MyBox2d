@@ -3,7 +3,6 @@
 
 #include "array.h"
 
-#include "allocate.h"
 #include "core.h"
 
 #include <string.h>
@@ -62,3 +61,5 @@ void b2Array_Resize( void** a, int elementSize, int count )
 	memcpy( *a, tmp, originalCount * elementSize );
 	b2DestroyArray( tmp, elementSize );
 }
+
+B2_ARRAY_SOURCE( int, b2Int );

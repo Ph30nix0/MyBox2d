@@ -82,11 +82,8 @@ void b2PrepareMouseJoint( b2JointSim* base, b2StepContext* context )
 	int idB = base->bodyIdB;
 
 	b2World* world = context->world;
-	b2Body* bodies = world->bodyArray;
 
-	b2CheckIndex( bodies, idB );
-
-	b2Body* bodyB = bodies + idB;
+	b2Body* bodyB = b2BodyArray_Get( &world->bodyArrayNew, idB );
 
 	B2_ASSERT( bodyB->setIndex == b2_awakeSet );
 	b2CheckIndex( world->solverSetArray, bodyB->setIndex );
@@ -94,9 +91,7 @@ void b2PrepareMouseJoint( b2JointSim* base, b2StepContext* context )
 	b2SolverSet* setB = world->solverSetArray + bodyB->setIndex;
 
 	int localIndexB = bodyB->localIndex;
-	B2_ASSERT( 0 <= localIndexB && localIndexB <= setB->sims.count );
-
-	b2BodySim* bodySimB = setB->sims.data + localIndexB;
+	b2BodySim* bodySimB = b2BodySimArray_Get( &setB->simsNew, localIndexB );
 
 	base->invMassB = bodySimB->invMass;
 	base->invIB = bodySimB->invInertia;
